@@ -37,6 +37,7 @@ class Car(Base):
     __tablename__ = 'cars'
 
     Id = Column(Integer, primary_key=True)
+    Price = Column(Float)
     Driven = Column(Integer)
     Fuel = Column(String)
     Doors = Column(Integer)
@@ -53,11 +54,20 @@ class Car(Base):
     def __init__(self, data):
         self.Id = data.get('_id')
 
+        self.Price = data.get('price', 0)
         self.Driven = int(data.get('Akstur', '0').replace(".", ''))
         self.Fuel = data.get('Eldsneyti', '')
-        self.Doors = int(data.get('Fjöldi dyra', '0'))
+        self.Doors = (
+            int(data.get('Fjöldi dyra', '0'))
+            if data.get('Fjöldi dyra').isnumeric()
+            else 0
+        )
         self.Valves = int(data.get('Fjöldi strokka', '0'))
-        self.Seats = int(data.get('Fjöldi sæta', '0'))
+        self.Seats = (
+            int(data.get('Fjöldi sæta', '0'))
+            if data.get('Fjöldi sæta').isnumeric()
+            else 0
+        )
         self.Maker = data.get('Framleiðandi', '')
         self.Drivetrain = data.get('Hjóladrifin', '')
         self.Color = data.get('Litur', '')
